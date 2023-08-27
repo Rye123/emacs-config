@@ -126,3 +126,16 @@
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 
+(setq org-agenda-files '("~/org"))
+
+;; Startup agenda as first thing
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
+
+(defun window-setup()
+  (org-agenda-list)
+  (delete-other-windows))
+
+(add-hook 'after-init-hook #'window-setup)
+
+;;; init.el ends here
