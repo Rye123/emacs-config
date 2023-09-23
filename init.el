@@ -1,103 +1,70 @@
-;;; Personal configuration -*- lexical-binding: t -*-
-
-;; Save the contents of this file under ~/.emacs.d/init.el
-;; Do not forget to use Emacs' built-in help system:
-;; Use C-h C-h to get an overview of all help commands.  All you
-;; need to know about Emacs (what commands exist, what functions do,
-;; what variables specify), the help system can provide.
-
-;; Add the NonGNU ELPA package archive
+;; Packages
 (require 'package)
 (add-to-list 'package-archives  '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
-(unless package-archive-contents  (package-refresh-contents))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(unless package-archive-contents  (package-refresh-contents t))
 
-;; Load a custom theme
+;; Display Customisation
 (load-theme 'manoj-dark t)
+(set-face-attribute 'default nil :font "Comic Mono") ; default fontface
+(tool-bar-mode -1) ; disable toolbar
+(global-display-line-numbers-mode t) ;; line numbering
+(electric-pair-mode t) ; pair parentheses
 
-;; Set default font face
-(set-face-attribute 'default nil :font "Comic Mono")
-
-;; Disable the tool bar
-(tool-bar-mode -1)
-
-;;; Completion framework
+;;; vertico: Completion framework
 (unless (package-installed-p 'vertico)
   (package-install 'vertico))
+(vertico-mode t) ; completing by narrowing
 
-;; Enable completion by narrowing
-(vertico-mode t)
-
-;; Enable line numbering by default
-(global-display-line-numbers-mode t)
-
-;; Automatically pair parentheses
-(electric-pair-mode t)
-
-;;; LSP Support
+;;; eglot: LSP Support
 (unless (package-installed-p 'eglot)
   (package-install 'eglot))
-
-;; Enable LSP support by default in programming buffers
 (add-hook 'prog-mode-hook #'eglot-ensure)
 
-;;; Inline static analysis
-
-;; Enabled inline static analysis
+;;; flymake: Inline static analysis
 (add-hook 'prog-mode-hook #'flymake-mode)
 
-;;; Git client
+;;; magit: Git Client
 (unless (package-installed-p 'magit)
   (package-install 'magit))
-
-;; Bind the `magit-status' command to a convenient key.
 (global-set-key (kbd "C-c g") #'magit-status)
 
-;;; Indication of local VCS changes
+;;; diff-hl: Highlight VCS changes
 (unless (package-installed-p 'diff-hl)
   (package-install 'diff-hl))
-
-;; Enable `diff-hl' support by default in programming buffers
 (add-hook 'prog-mode-hook #'diff-hl-mode)
 
-;;; Go Support
-(unless (package-installed-p 'go-mode)
-  (package-install 'go-mode))
+;; Language Support
+;; (unless (package-installed-p 'go-mode)
+  ;; (package-install 'go-mode))
 
 ;;; JSON Support
-(unless (package-installed-p 'json-mode)
-  (package-install 'json-mode))
+;; (unless (package-installed-p 'json-mode)
+  ;; (package-install 'json-mode))
 
 ;;; YAML Support
-(unless (package-installed-p 'yaml-mode)
-  (package-install 'yaml-mode))
+;; (unless (package-installed-p 'yaml-mode)
+  ;; (package-install 'yaml-mode))
 
 ;;; LaTeX support
-(unless (package-installed-p 'auctex)
-  (package-install 'auctex))
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-
-;; Enable LaTeX math support
-(add-hook 'LaTeX-mode-map #'LaTeX-math-mode)
+;; (unless (package-installed-p 'auctex)
+  ;; (package-install 'auctex))
+;; (setq TeX-auto-save t)
+;; (setq TeX-parse-self t)
+;; (setq-default TeX-master nil)
+;; (add-hook 'LaTeX-mode-map #'LaTeX-math-mode) ; latex math support
 
 ;;; Markdown support
-(unless (package-installed-p 'markdown-mode)
-  (package-install 'markdown-mode))
+;; (unless (package-installed-p 'markdown-mode)
+  ;; (package-install 'markdown-mode))
 
-;;; Outline-based notes management and organizer
-
-;;; In-Emacs Terminal Emulation
+;;; eat: In-Emacs Terminal Emulation
 (unless (package-installed-p 'eat)
   (package-install 'eat))
-
-;; Close the terminal buffer when the shell terminates.
 (setq eat-kill-buffer-on-exit t)
-
-;; Enable mouse-support.
 (setq eat-enable-mouse t)
 
-;;; Jump to arbitrary positions
+;;; avy: Jump to arbitrary positions
 (unless (package-installed-p 'avy)
   (package-install 'avy))
 (global-set-key (kbd "C-c z") #'avy-goto-word-1)
@@ -116,11 +83,6 @@
 (recentf-mode t)
 (defalias 'yes-or-no #'y-or-n-p)
 
-;; Store automatic customisation options elsewhere
-(setq custom-file (locate-user-emacs-file "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
 ;; Org-mode Shortcuts
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c a") #'org-agenda)
@@ -128,14 +90,5 @@
 
 (setq org-agenda-files '("~/org"))
 
-;; Startup agenda as first thing
-(setq inhibit-startup-message t)
-(setq initial-scratch-message nil)
-
-(defun window-setup()
-  (org-agenda-list)
-  (delete-other-windows))
-
-(add-hook 'after-init-hook #'window-setup)
 
 ;;; init.el ends here
