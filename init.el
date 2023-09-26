@@ -16,6 +16,11 @@
   (package-install 'vertico))
 (vertico-mode t) ; completing by narrowing
 
+;;; company: Code Completion Suggestions framework
+(unless (package-installed-p 'company)
+  (package-install 'company))
+(add-hook 'after-init-hook 'global-company-mode)
+
 ;;; eglot: LSP Support
 (unless (package-installed-p 'eglot)
   (package-install 'eglot))
