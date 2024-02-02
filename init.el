@@ -1,7 +1,8 @@
 (require 'package)
+(package-initialize)
 (unless package-archive-contents
-  (package-refresh-contents t))
-(package-install-selected-packages 'noconfirm)
+  (package-refresh-contents))
+(package-install-selected-packages)
 
 ;; Display Customisation
 (load-theme 'manoj-dark t)
