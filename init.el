@@ -43,6 +43,10 @@
 ;; (unless (package-installed-p 'go-mode)
   ;; (package-install 'go-mode))
 
+;;; Python Support
+(unless (package-install-p 'python-mode)
+  (package-install 'python-mode))
+
 ;;; JSON Support
 ;; (unless (package-installed-p 'json-mode)
   ;; (package-install 'json-mode))
@@ -60,8 +64,8 @@
 ;; (add-hook 'LaTeX-mode-map #'LaTeX-math-mode) ; latex math support
 
 ;;; Markdown support
-;; (unless (package-installed-p 'markdown-mode)
-  ;; (package-install 'markdown-mode))
+(unless (package-installed-p 'markdown-mode)
+  (package-install 'markdown-mode))
 
 ;;; eat: In-Emacs Terminal Emulation
 (unless (package-installed-p 'eat)
@@ -87,6 +91,20 @@
 (savehist-mode t)
 (recentf-mode t)
 (defalias 'yes-or-no #'y-or-n-p)
+(setq backup-directory-alist `(("/" . "~/.backups")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+
+;; Custom Start Screen
+(defun start-scr()
+  (org-agenda nil "n"))
+(add-hook 'after-init-hook #'start-scr)
+
+(setq inhibit-startup-screen t
+      initial-buffer-choice nil)
 
 ;; Org-mode Shortcuts
 (global-set-key (kbd "C-c l") #'org-store-link)
